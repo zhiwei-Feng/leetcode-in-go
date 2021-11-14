@@ -11,18 +11,20 @@ func lengthOfLIS(nums []int) int {
 			longest++
 			d[longest] = nums[i]
 		} else {
+			// 查找最后一个d[lo]<nums[i]的下一个位置
+			// 换句话说就是找d[lo]>=nums[i]的下届
 			lo, hi := 1, longest
-			pos := 0
-			for lo <= hi {
+			// pos := 0
+			for lo < hi {
 				m := lo + (hi-lo)/2
-				if d[m] >= nums[i] {
-					hi = m - 1
+				if d[m] < nums[i] {
+					lo=m+1
 				} else {
-					pos = m
-					lo = m + 1
+					// pos = m
+					hi = m
 				}
 			}
-			d[pos+1] = min(d[pos+1], nums[i])
+			d[lo] = min(d[lo], nums[i])
 		}
 	}
 	return longest
