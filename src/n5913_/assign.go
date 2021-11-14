@@ -3,63 +3,45 @@ package n5913
 import "sort"
 
 func maxTaskAssign(tasks []int, workers []int, pills int, strength int) int {
-	sort.Sort(sort.Reverse(sort.IntSlice(tasks)))
-	sort.Sort(sort.Reverse(sort.IntSlice(workers)))
-	m := len(tasks)
-	n := len(workers)
-	lo, hi := 0, min(m, n)
+	sort.Ints(tasks)
+	sort.Ints(workers)
+	lo, hi := 0, min(len(tasks), len(workers))
 	for lo < hi {
-		mid := lo + (hi-lo)/2
-		if success(tasks[m-mid:m], workers[:mid], pills, strength) {
-			lo = mid
+		// 这里不用lo+(hi-lo)/2是因为
+		// 当出现仅有i,i+1的候选位置，且i位置是ok的时候，m会永远得到i，而不是进一步考察i+1
+		m := lo + (hi-lo+1)/2
+		task_ind := 0
+		p := pills
+		fail := false
+		valid_tasks := []int{}
+		for _, w := range workers[len(workers)-m:] {
+			for task_ind < m && tasks[task_ind] <= w+strength {
+				valid_tasks = append(valid_tasks, tasks[task_ind])
+				task_ind++
+			}
+			if len(valid_tasks) == 0 {
+				fail = true
+				break
+			}
+			if valid_tasks[0] <= w {
+				valid_tasks = valid_tasks[1:]
+			} else {
+				if p == 0 {
+					fail = true
+					break
+				} else {
+					p--
+					valid_tasks = valid_tasks[:len(valid_tasks)-1]
+				}
+			}
+		}
+		if fail {
+			hi = m - 1
 		} else {
-			hi = mid - 1
+			lo = m
 		}
 	}
 	return lo
-}
-
-func success(tasks []int, workers []int, pills, strength int) bool {
-	workerMap := make(map[int]int)
-	for _, w := range workers {
-		workerMap[w]++
-	}
-	for i := 0; i < len(tasks); i++ {
-		if len(workerMap) == 0 {
-			return false
-		}
-
-		// 抽取keys
-		workerKeys := []int{}
-		for k, _ := range workerMap {
-			workerKeys = append(workerKeys, k)
-		}
-		sort.Ints(workerKeys)
-
-		curWorker := workers[len(workers)-1]
-		if curWorker >= tasks[i] {
-			workerMap[curWorker]--
-			if workerMap[curWorker] == 0 {
-				delete(workerMap, curWorker)
-			}
-		} else {
-			if pills == 0 {
-				return false
-			}
-			ind := sort.Search(len(workerKeys), func(k int) bool {
-				return workerKeys[k] >= tasks[i]-strength
-			})
-			if ind == len(workerKeys) {
-				return false
-			}
-			pills--
-			workerMap[workerKeys[ind]]--
-			if workerMap[workerKeys[ind]] == 0 {
-				delete(workerMap, workerKeys[ind])
-			}
-		}
-	}
-	return true
 }
 
 func min(i, j int) int {
