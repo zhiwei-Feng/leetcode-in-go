@@ -9,7 +9,7 @@ func findNumberOfLIS(nums []int) int {
 		dp[i] = 1
 		count[i] = 1
 	}
-	for i := 1; i < len(nums); i++ {
+	for i := 0; i < len(nums); i++ {
 		for j := 0; j < i; j++ {
 			if nums[i] > nums[j] {
 				if dp[i] < dp[j]+1 {
