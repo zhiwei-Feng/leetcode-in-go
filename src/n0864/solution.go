@@ -1,12 +1,13 @@
 package n0864
 
+import "container/list"
 
-// refer to: 
+// refer to:
 // https://leetcode-cn.com/problems/shortest-path-to-get-all-keys/solution/golang-bfs-by-resara/
 type Node struct {
-	i, j    int
-	step    int
-	key     int
+	i, j int
+	step int
+	key  int
 }
 
 var (
@@ -25,7 +26,7 @@ func shortestPathAllKeys(grid []string) int {
 		for j := 0; j < len(grid[i]); j++ {
 			g[i][j] = grid[i][j]
 			if g[i][j] >= 'a' && g[i][j] <= 'z' {
-				success |= 1 << uint(g[i][j] - 'a')
+				success |= 1 << uint(g[i][j]-'a')
 			}
 			if g[i][j] == '@' {
 				l.PushBack(Node{i, j, 0, 0})
@@ -52,9 +53,9 @@ func bfs(success int, g [][]byte, l *list.List, visited [][][]bool) int {
 		v := e.Value.(Node)
 		i := v.i
 		j := v.j
-		
+
 		if g[i][j] >= 'a' && g[i][j] <= 'z' {
-			v.key |= 1 << uint(g[i][j] - 'a')
+			v.key |= 1 << uint(g[i][j]-'a')
 		}
 		if v.key == success {
 			return v.step
@@ -70,11 +71,11 @@ func bfs(success int, g [][]byte, l *list.List, visited [][][]bool) int {
 			}
 			if g[ii][jj] >= 'A' && g[ii][jj] <= 'Z' {
 				needKey := g[ii][jj] - 'A'
-				if (( v.key >> needKey) & 1) == 0 {
+				if ((v.key >> needKey) & 1) == 0 {
 					continue
 				}
 			}
-            visited[ii][jj][v.key] = true
+			visited[ii][jj][v.key] = true
 			n := Node{ii, jj, v.step + 1, v.key}
 			l.PushBack(n)
 		}
