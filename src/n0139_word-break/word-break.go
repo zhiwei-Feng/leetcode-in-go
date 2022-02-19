@@ -15,6 +15,7 @@ func wordBreak(s string, wordDict []string) bool {
 			continue
 		}
 		for j:=0;j<i;j++{
+			// 切分，以[0..=j]为前一部分，[j+1..=i]为后一份
 			last := s[j+1:i+1]
 			if dp[j] {
 				if _, ok:=wordCount[last];ok{
