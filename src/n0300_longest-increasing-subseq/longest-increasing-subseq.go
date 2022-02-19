@@ -1,6 +1,8 @@
 package n0300longestincreasingsubseq
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func lengthOfLIS(nums []int) int {
 	d := make([]int, len(nums)+1)
@@ -18,7 +20,7 @@ func lengthOfLIS(nums []int) int {
 			for lo < hi {
 				m := lo + (hi-lo)/2
 				if d[m] < nums[i] {
-					lo=m+1
+					lo = m + 1
 				} else {
 					// pos = m
 					hi = m
