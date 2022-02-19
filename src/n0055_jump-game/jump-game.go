@@ -1,14 +1,14 @@
 package n0055
 
 func canJump(nums []int) bool {
-	rightmost := 0
-	for i := 0; i < len(nums); i++ {
-		if i > rightmost {
-			return false
+	maxR := 0
+	i:=0
+	for ;i<len(nums)&&i<=maxR;i++{
+		if i+nums[i]>maxR{
+			maxR = i+nums[i]
 		}
-		rightmost = max(rightmost, i+nums[i])
 	}
-	return true
+	return i==len(nums)
 }
 
 func max(i, j int) int {
