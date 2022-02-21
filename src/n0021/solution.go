@@ -11,18 +11,13 @@ func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
 	p, q := list1, list2
 	for p != nil && q != nil {
 		if p.Val < q.Val {
-			pNext := p.Next
-			p.Next = nil
 			newTail.Next = p
-			newTail = newTail.Next
-			p = pNext
+			p = p.Next
 		} else {
-			qNext := q.Next
-			q.Next = nil
 			newTail.Next = q
-			newTail = newTail.Next
-			q = qNext
+			q = q.Next
 		}
+		newTail=  newTail.Next
 	}
 
 	if p != nil {
