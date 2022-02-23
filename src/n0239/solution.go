@@ -1,8 +1,30 @@
 package n0239
 
+func maxSlidingWindow(nums []int, k int) []int {
+	decreaseArr := []int{}
+	winStart := 0
+	ans := []int{}
+	for winEnd := 0; winEnd < len(nums); winEnd++ {
+		for len(decreaseArr) > 0 && decreaseArr[len(decreaseArr)-1] < nums[winEnd] {
+			decreaseArr = decreaseArr[:len(decreaseArr)-1]
+		}
+		decreaseArr = append(decreaseArr, nums[winEnd])
+		if winEnd < k-1 {
+			continue
+		}
+		ans = append(ans, decreaseArr[0])
+		delNum := nums[winStart]
+		if delNum == decreaseArr[0] {
+			decreaseArr = decreaseArr[1:]
+		}
+		winStart++
+	}
+	return ans
+}
+
 // monotonous queue method: time=O(n), space=O(k)
 // monoQueue store element index, and the corresponding value is monotonous(left side is bigger)
-func maxSlidingWindow(nums []int, k int) []int {
+func maxSlidingWindow_(nums []int, k int) []int {
 	monoQueue := []int{} // store ind
 	winSt := 0
 	ans := []int{}
