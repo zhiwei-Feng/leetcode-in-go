@@ -1,8 +1,5 @@
 package n0239
 
-import ()
-
-
 // monotonous queue method: time=O(n), space=O(k)
 // monoQueue store element index, and the corresponding value is monotonous(left side is bigger)
 func maxSlidingWindow(nums []int, k int) []int {
