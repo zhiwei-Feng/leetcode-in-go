@@ -1,6 +1,65 @@
 package n0301
 
 func removeInvalidParentheses(s string) []string {
+	ll, rr := 0, 0
+	for i := 0; i < len(s); i++ {
+		if s[i] == '(' {
+			ll++
+		} else if s[i] == ')' {
+			if ll > 0 {
+				ll--
+			} else {
+				rr++
+			}
+		}
+	}
+	ans := []string{}
+	helper(&ans, s, 0, ll, rr)
+	return ans
+}
+
+func isValid(str string) bool {
+	cnt := 0
+	for _, ch := range str {
+		if ch == '(' {
+			cnt++
+		} else if ch == ')' {
+			cnt--
+			if cnt < 0 {
+				return false
+			}
+		}
+	}
+	return cnt == 0
+}
+
+func helper(ans *[]string, str string, start, ll, rr int) {
+	if ll == 0 && rr == 0 {
+		if isValid(str) {
+			*ans = append(*ans, str)
+		}
+		return
+	}
+
+	for i := start; i < len(str); i++ {
+		if i != start && str[i] == str[i-1] {
+			continue
+		}
+		if ll+rr > len(str)-i { // 后续字符无法满足减去ll+rr个字符
+			return
+		}
+
+		// try discard left
+		if ll > 0 && str[i] == '(' {
+			helper(ans, str[:i]+str[i+1:], i, ll-1, rr)
+		}
+		if rr > 0 && str[i] == ')' {
+			helper(ans, str[:i]+str[i+1:], i, ll, rr-1)
+		}
+	}
+}
+
+func removeInvalidParentheses_(s string) []string {
 	var (
 		maxScore int //最终字符串每有一个'('，则+1， 一个')'则-1
 		maxLen   int
