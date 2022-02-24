@@ -47,6 +47,7 @@ func maxCoins(nums []int) int {
 	return solve(0, n+1, val, rec)
 }
 
+// 遍历left 到 right之间的任意一个位置，当做第一个加入的元素
 func solve(left, right int, val []int, rec [][]int) int {
 	if left >= right-1 {
 		return 0
