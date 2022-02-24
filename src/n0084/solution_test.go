@@ -13,6 +13,7 @@ func Test_largestRectangleArea(t *testing.T) {
 	}{
 		{"case1", args{[]int{2, 1, 5, 6, 2, 3}}, 10},
 		{"case2", args{[]int{2,4}}, 4},
+		{"case3", args{[]int{2,1,2}}, 3},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
