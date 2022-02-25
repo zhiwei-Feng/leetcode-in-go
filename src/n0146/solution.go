@@ -1,32 +1,29 @@
 package n0146
 
 type LinkNode struct {
-	Val        int
-	Key        int
+	Key, Val   int
 	Prev, Next *LinkNode
 }
-
 type LRUCache struct {
-	capacity  int
-	QueueHead *LinkNode
-	QueueTail *LinkNode
-	NodeMap   map[int]*LinkNode
+	capacity           int
+	KeyMap             map[int]*LinkNode
+	LinkHead, LinkTail *LinkNode
 }
 
 func Constructor(capacity int) LRUCache {
 	cache := LRUCache{
-		capacity:  capacity,
-		QueueHead: &LinkNode{},
-		QueueTail: &LinkNode{},
-		NodeMap:   make(map[int]*LinkNode),
+		capacity: capacity,
+		KeyMap:   make(map[int]*LinkNode),
+		LinkHead: &LinkNode{},
+		LinkTail: &LinkNode{},
 	}
-	cache.QueueHead.Next = cache.QueueTail
-	cache.QueueTail.Prev = cache.QueueHead
+	cache.LinkHead.Next = cache.LinkTail
+	cache.LinkTail.Prev = cache.LinkHead
 	return cache
 }
 
 func (this *LRUCache) Get(key int) int {
-	if v, ok := this.NodeMap[key]; !ok {
+	if v, ok := this.KeyMap[key]; !ok {
 		return -1
 	} else {
 		this.MoveToHead(v)
@@ -35,23 +32,18 @@ func (this *LRUCache) Get(key int) int {
 }
 
 func (this *LRUCache) Put(key int, value int) {
-	if v, ok := this.NodeMap[key]; !ok {
-		node := &LinkNode{Key: key, Val: value}
-		this.NodeMap[key] = node
-		this.AddToHead(node)
-		if len(this.NodeMap) > this.capacity {
-			delTail := this.RemoveTail()
-			delete(this.NodeMap, delTail)
-		}
-	} else {
-		v.Val = value
+	if v, ok := this.KeyMap[key]; ok {
 		this.MoveToHead(v)
+		v.Val = value
+	} else {
+		newNode := &LinkNode{Val: value, Key: key}
+		this.AddToHead(newNode)
+		this.KeyMap[key] = newNode
+		if len(this.KeyMap) > this.capacity {
+			delNode := this.RemoveTail()
+			delete(this.KeyMap, delNode.Key)
+		}
 	}
-}
-
-func (this *LRUCache) MoveToHead(node *LinkNode) {
-	this.RemoveNode(node)
-	this.AddToHead(node)
 }
 
 func (this *LRUCache) RemoveNode(node *LinkNode) {
@@ -60,19 +52,31 @@ func (this *LRUCache) RemoveNode(node *LinkNode) {
 }
 
 func (this *LRUCache) AddToHead(node *LinkNode) {
-	node.Prev = this.QueueHead
-	node.Next = this.QueueHead.Next
-	this.QueueHead.Next.Prev = node
-	this.QueueHead.Next = node
+	node.Next = this.LinkHead.Next
+	node.Prev = this.LinkHead
+	this.LinkHead.Next = node
+	node.Next.Prev = node
 }
 
-func (this *LRUCache) RemoveTail() int {
-	delTail := this.QueueTail.Prev
-	newTail := this.QueueTail.Prev.Prev
-	newTail.Next = this.QueueTail
-	this.QueueTail.Prev = newTail
-	return delTail.Key
+func (this *LRUCache) MoveToHead(node *LinkNode) {
+	this.RemoveNode(node)
+	this.AddToHead(node)
 }
+
+func (this *LRUCache) RemoveTail() *LinkNode {
+	delNode := this.LinkTail.Prev
+	newTail := delNode.Prev
+	newTail.Next = this.LinkTail
+	this.LinkTail.Prev = newTail
+	return delNode
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * obj := Constructor(capacity);
+ * param_1 := obj.Get(key);
+ * obj.Put(key,value);
+ */
 
 /**
  * Your LRUCache object will be instantiated and called as such:
