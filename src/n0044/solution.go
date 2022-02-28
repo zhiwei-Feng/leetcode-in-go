@@ -17,9 +17,9 @@ func isMatch(s string, p string) bool {
 	}
 	for i := 1; i <= m; i++ {
 		for j := 1; j <= n; j++ {
-			if p[j] == '*' {
+			if p[j-1] == '*' {
 				dp[i][j] = dp[i-1][j] || dp[i][j-1]
-			} else if p[j] == '?' || p[j] == s[i] {
+			} else if p[j-1] == '?' || p[j-1] == s[i-1] {
 				dp[i][j] = dp[i-1][j-1]
 			}
 		}
