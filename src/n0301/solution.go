@@ -1,40 +1,42 @@
 package n0301
 
 func removeInvalidParentheses(s string) []string {
-	ll, rr := 0, 0
-	for i := 0; i < len(s); i++ {
+	// 1. 记录多余的左括号和右括号个数
+	lremove, rremove := 0, 0
+	for i := range s {
 		if s[i] == '(' {
-			ll++
+			lremove++
 		} else if s[i] == ')' {
-			if ll > 0 {
-				ll--
+			if lremove > 0 {
+				lremove--
 			} else {
-				rr++
+				rremove++
 			}
 		}
 	}
 	ans := []string{}
-	helper(&ans, s, 0, ll, rr)
+	helper(&ans, s, 0, lremove, rremove)
 	return ans
 }
 
-func isValid(str string) bool {
+func isValid(s string) bool {
 	cnt := 0
-	for _, ch := range str {
-		if ch == '(' {
+	for i := range s {
+		if s[i] == '(' {
 			cnt++
-		} else if ch == ')' {
-			cnt--
-			if cnt < 0 {
+		} else if s[i] == ')' {
+			if cnt == 0 {
 				return false
+			} else {
+				cnt--
 			}
 		}
 	}
 	return cnt == 0
 }
 
-func helper(ans *[]string, str string, start, ll, rr int) {
-	if ll == 0 && rr == 0 {
+func helper(ans *[]string, str string, start, lremove, rremove int) {
+	if lremove == 0 && rremove == 0 {
 		if isValid(str) {
 			*ans = append(*ans, str)
 		}
@@ -45,16 +47,14 @@ func helper(ans *[]string, str string, start, ll, rr int) {
 		if i != start && str[i] == str[i-1] {
 			continue
 		}
-		if ll+rr > len(str)-i { // 后续字符无法满足减去ll+rr个字符
+		if lremove+rremove > len(str)-i {
 			return
 		}
-
-		// try discard left
-		if ll > 0 && str[i] == '(' {
-			helper(ans, str[:i]+str[i+1:], i, ll-1, rr)
+		if lremove > 0 && str[i] == '(' {
+			helper(ans, str[:i]+str[i+1:], i, lremove-1, rremove) // i不是i+1
 		}
-		if rr > 0 && str[i] == ')' {
-			helper(ans, str[:i]+str[i+1:], i, ll, rr-1)
+		if rremove > 0 && str[i] == ')' {
+			helper(ans, str[:i]+str[i+1:], i, lremove, rremove-1)
 		}
 	}
 }
