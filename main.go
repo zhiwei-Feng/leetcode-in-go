@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/zhiwei-Feng/leetcode-in-go/src/n1116"
+	"github.com/zhiwei-Feng/leetcode-in-go/src/n1117"
 )
 
 func main() {
-	n1116.Print(1000)
+	n1117.Print("OOHHHH")
 }
