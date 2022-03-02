@@ -38,7 +38,7 @@ func Solver(head *Node, k int) *Node {
 }
 
 func reverse(head *Node) *Node {
-	p := &Node{Next: head}
+	p := &Node{Next: nil}
 	q := head
 	for q != nil {
 		nextq := q.Next
