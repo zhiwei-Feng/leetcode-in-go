@@ -1,38 +1,27 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"time"
+	"io"
+	"os"
+	"sort"
 )
 
-func printA(c chan int, a chan int) {
-	for range c {
-		fmt.Print("A")
-		a <- 1
-	}
-}
-
-func printB(a chan int, b chan int) {
-	for range a {
-		fmt.Print("B")
-		b <- 1
-	}
-}
-
-func printC(b chan int, c chan int) {
-	for range b {
-		fmt.Print("C")
-		c <- 1
-	}
-}
 
 func main() {
-	cha := make(chan int)
-	chb := make(chan int)
-	chc := make(chan int)
-	go printA(chc, cha)
-	go printB(cha, chb)
-	go printC(chb, chc)
-	chc <- 1
-	time.Sleep(3 * time.Second)
+	uint
+	file, err := os.Open("a.txt")
+	if err!=nil {
+		panic("")
+	}
+	defer file.Close()
+	reader := bufio.NewReader(file)
+	for {
+		str, err := reader.ReadString('\n')
+		if err == io.EOF {
+			break
+		}
+		fmt.Println(str)
+	}
 }
