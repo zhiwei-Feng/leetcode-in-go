@@ -25,7 +25,7 @@ func checkIPv4(query string) bool {
 		if err != nil || intVal > 255 || intVal < 0 {
 			return false
 		}
-		if intVal == 0 {
+		if ip == "0" {
 			continue
 		}
 		count := 0
@@ -50,7 +50,7 @@ func checkIPv6(query string) bool {
 			return false
 		}
 		for i := range ip {
-			if (ip[i] >= '0' && ip[i] <= '9') || (ip[i] >= 'a' && ip[i] <= 'z') || (ip[i] >= 'A' && ip[i] <= 'Z') {
+			if (ip[i] >= '0' && ip[i] <= '9') || (ip[i] >= 'a' && ip[i] <= 'f') || (ip[i] >= 'A' && ip[i] <= 'F') {
 				continue
 			} else {
 				return false
