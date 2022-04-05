@@ -1,11 +1,7 @@
 package main
 
-import (
-	"fmt"
-)
+import ()
 
 func main() {
-	mPtr := new([]int)
-	*mPtr = append(*mPtr, 1)
-	fmt.Println(*mPtr)
+
 }
