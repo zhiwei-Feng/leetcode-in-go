@@ -1,94 +1,56 @@
 package n0029
 
-import "math"
+import (
+	"math"
+)
 
 func divide(dividend int, divisor int) int {
 	if dividend == 0 {
 		return 0
 	}
 	if divisor == 1 {
-		return min(dividend, math.MaxInt32)
+		return dividend
 	}
-	if dividend < 0 {
-		return -divide(-dividend, divisor)
+	if divisor == -1 {
+		if dividend == math.MinInt32 {
+			return math.MaxInt32
+		} else {
+			return -dividend
+		}
 	}
-	if divisor < 0 {
-		return -divide(dividend, -divisor)
+
+	a, b := dividend, divisor
+	sign := true
+	if (a > 0 && b < 0) || (a < 0 && b > 0) {
+		sign = false
 	}
-	if dividend < divisor {
+	if a < 0 {
+		a = -a
+	}
+	if b < 0 {
+		b = -b
+	}
+	res := div(a, b)
+	if sign {
+		if res > math.MaxInt32 {
+			res = math.MaxInt32
+		}
+		return res
+	}
+	return -res
+
+}
+
+// a/b, a<0, b<0
+func div(a, b int) int {
+	if a < b {
 		return 0
 	}
-
-	ans := 1
-	d := divisor
-	for (d + d) <= dividend {
-		d = d + d
-		ans = ans + ans
+	count := 1
+	result := b
+	for result+result <= a {
+		result += result
+		count += count
 	}
-	for d <= dividend {
-		d += divisor
-		ans++
-	}
-	if ans == 1 {
-		return 1
-	}
-	return min(ans-1, math.MaxInt32)
+	return count + div(a-result, b)
 }
-
-// x*y>=z是否成立
-func quickAdd(x, y, z int) bool {
-	result := 0
-	if y&1 == 1 {
-		result += x
-		y--
-	}
-	// y为偶数
-	
-}
-
-func min(i, j int) int {
-	if i < j {
-		return i
-	}
-	return j
-}
-
-// func divide(dividend int, divisor int) int {
-// 	if dividend == 0 {
-// 		return 0
-// 	}
-// 	if divisor == 1 {
-// 		return min(dividend, math.MaxInt32)
-// 	}
-// 	if dividend < 0 {
-// 		return -divide(-dividend, divisor)
-// 	}
-// 	if divisor < 0 {
-// 		return -divide(dividend, -divisor)
-// 	}
-// 	if dividend < divisor {
-// 		return 0
-// 	}
-
-// 	ans := 1
-// 	d := divisor
-// 	for (d + d) <= dividend {
-// 		d = d + d
-// 		ans = ans + ans
-// 	}
-// 	for d <= dividend {
-// 		d += divisor
-// 		ans++
-// 	}
-//     if ans == 1 {
-// 		return 1
-// 	}
-// 	return min(ans-1, math.MaxInt32)
-// }
-
-// func min(i, j int) int {
-// 	if i < j {
-// 		return i
-// 	}
-// 	return j
-// }
