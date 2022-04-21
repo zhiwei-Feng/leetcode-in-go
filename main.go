@@ -1,10 +1,26 @@
 package main
 
 import (
-	"C"
+	"sync"
 )
 
+var a string
+var done bool
+var once sync.Once
+
+func setup() {
+	a = "hello, world"
+	done = true
+}
+
+func doprint() {
+	if !done {
+		once.Do(setup)
+	}
+	print(a)
+}
+
 func main() {
-	var ch chan struct{}
-	<-ch
+	go doprint()
+	go doprint()
 }
